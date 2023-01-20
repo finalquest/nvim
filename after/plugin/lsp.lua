@@ -3,20 +3,16 @@ local nnoremap = Remap.nnoremap
 local inoremap = Remap.inoremap
 
 local cmp_nvim_status, cmp_nvim = pcall(require, "cmp_nvim_lsp")
-print "antessssss"
 if not cmp_nvim_status then
-  print "AAAAAAAA" 
-  return
+	return
 end
 
 -- Setup nvim-cmp.
 local cmp = require("cmp")
 local source_mapping = {
-	youtube = "[Suck it YT]",
 	buffer = "[Buffer]",
 	nvim_lsp = "[LSP]",
 	nvim_lua = "[Lua]",
-	cmp_tabnine = "[TN]",
 	path = "[Path]",
 }
 local lspkind = require("lspkind")
@@ -35,11 +31,11 @@ cmp.setup({
 		end,
 	},
 	mapping = cmp.mapping.preset.insert({
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+		["<C-y>"] = cmp.mapping.confirm({ select = true }),
 		["<C-u>"] = cmp.mapping.scroll_docs(-4),
 		["<C-d>"] = cmp.mapping.scroll_docs(4),
 		["<C-Space>"] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
 
 	formatting = {
@@ -67,64 +63,74 @@ cmp.setup({
 
 		-- For luasnip user.
 		{ name = "luasnip" },
-    { name = "path"},
+		{ name = "path" },
 
 		-- For ultisnips user.
 		-- { name = 'ultisnips' },
 
 		{ name = "buffer" },
-
 	},
 })
 
 local function config(_config)
 	return vim.tbl_deep_extend("force", {
 		on_attach = function(client, bufnr)
-
-      -- if client.server_capabilities.documentFormattingProvider then
-      --   vim.api.nvim_command [[augroup Format]]
-      --   vim.api.nvim_command [[autocmd! * <buffer>]]
-      --   vim.api.nvim_command [[autocmd! BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
-      --   vim.api.nvim_command [[augroup END]]
-      -- end 
-			nnoremap("gd","<cmd>Lspsaga peek_definition<CR>")
-			nnoremap("gf","<cmd>Lspsaga lsp_finder<CR>")
-			nnoremap("gD", function() vim.lsp.buf.declaration() end)
-			nnoremap("gi", function() vim.lsp.buf.implementation() end)
+			-- if client.server_capabilities.documentFormattingProvider then
+			--   vim.api.nvim_command [[augroup Format]]
+			--   vim.api.nvim_command [[autocmd! * <buffer>]]
+			--   vim.api.nvim_command [[autocmd! BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+			--   vim.api.nvim_command [[augroup END]]
+			-- end
+			nnoremap("gd", "<cmd>Lspsaga peek_definition<CR>")
+			nnoremap("gf", "<cmd>Lspsaga lsp_finder<CR>")
+			nnoremap("gD", function()
+				vim.lsp.buf.declaration()
+			end)
+			nnoremap("gi", function()
+				vim.lsp.buf.implementation()
+			end)
 			nnoremap("K", "<cmd>Lspsaga hover_doc<CR>")
-			nnoremap("<leader>vws", function() vim.lsp.buf.workspace_symbol() end)
-			nnoremap("<leader>ca","<cmd>Lspsaga code_action<CR>" )
-			nnoremap("<leader>rn","<cmd>Lspsaga rename<CR>" )
-			nnoremap("<leader>d","<cmd>Lspsaga show_line_diagnostics<CR>" )
-			nnoremap("<leader>d","<cmd>Lspsaga show_cursor_diagnostics<CR>" )
-			nnoremap("H", function() vim.diagnostic.open_float() end)
+			nnoremap("<leader>vws", function()
+				vim.lsp.buf.workspace_symbol()
+			end)
+			nnoremap("<leader>ca", "<cmd>Lspsaga code_action<CR>")
+			nnoremap("<leader>rn", "<cmd>Lspsaga rename<CR>")
+			nnoremap("<leader>d", "<cmd>Lspsaga show_line_diagnostics<CR>")
+			nnoremap("<leader>d", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
+			nnoremap("H", function()
+				vim.diagnostic.open_float()
+			end)
 			nnoremap("[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
 			nnoremap("]d", "<cmd>Lspsaga diagnostic_jump_next<CR>")
-			nnoremap("<leader>vco", function() vim.lsp.buf.code_action({
-                filter = function(code_action)
-                    if not code_action or not code_action.data then
-                        return false
-                    end
+			nnoremap("<leader>vco", function()
+				vim.lsp.buf.code_action({
+					filter = function(code_action)
+						if not code_action or not code_action.data then
+							return false
+						end
 
-                    local data = code_action.data.id
-                    return string.sub(data, #data - 1, #data) == ":0"
-                end,
-                apply = true
-            }) end)
-			nnoremap("<leader>vrr", function() vim.lsp.buf.references() end)
-			inoremap("<C-h>", function() vim.lsp.buf.signature_help() end)
+						local data = code_action.data.id
+						return string.sub(data, #data - 1, #data) == ":0"
+					end,
+					apply = true,
+				})
+			end)
+			nnoremap("<leader>vrr", function()
+				vim.lsp.buf.references()
+			end)
+			inoremap("<C-h>", function()
+				vim.lsp.buf.signature_help()
+			end)
 		end,
 	}, _config or {})
 end
 
-local on_attach = function(client, bufnr)
-end
+local on_attach = function(client, bufnr) end
 
 local capabilities = cmp_nvim.default_capabilities()
 
-
 require("lspconfig").tsserver.setup(config({
-  capabilities = capabilities
+	capabilities = capabilities,
 }))
 -- require("lspconfig").tsserver.setup {
 --   capabilities = capabilities,

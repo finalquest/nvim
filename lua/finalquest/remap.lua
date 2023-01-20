@@ -9,4 +9,6 @@ nnoremap("<leader>n", "<cmd>NvimTreeFocus<CR>")
 nnoremap("<C-t>", "<cmd>NvimTreeToggle<CR>")
 nnoremap("<C-f>", "<cmd>NvimTreeFindFile<CR>")
 nnoremap("<leader>nc", "<cmd>NvimTreeCollapse<CR>")
-
+nnoremap("ZS", ":w<cr>")
+nnoremap("<C-d>", "<C-d>zz")
+nnoremap("<C-u>", "<C-u>zz")
